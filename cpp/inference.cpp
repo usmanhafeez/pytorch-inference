@@ -1,4 +1,4 @@
-
+#include <iomanip>
 #include <torch/script.h>
 #include <torch/torch.h>
 
@@ -51,6 +51,19 @@ int main() {
         std::vector<torch::jit::IValue> inputs{input};
 
         auto output = model.forward(inputs).toTensor();
+
+	// Print raw logits for numerical comparison with Python
+	auto logits = output.contiguous().view({-1});
+
+	std::cout << "LOGITS:";
+	std::cout << std::scientific << std::setprecision(9);
+
+	for (int i = 0; i < logits.numel(); ++i) {
+    		std::cout << " " << logits[i].item<float>();
+		}
+
+	std::cout << "\n";
+	std::cout << std::defaultfloat;
 
         auto probabilities = torch::softmax(output, 1);
 

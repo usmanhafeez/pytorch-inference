@@ -191,18 +191,31 @@ Results are specific to this hardware, workload, and benchmark methodology.
 
 Single-threaded execution was faster for this small CNN in the measured experiment.
 
+
+
 ## Automated Tests
 
-The project includes four pytest tests:
+The project includes five automated pytest tests:
 
 1. CNN output shape validation
-2. Trained weights loading
-3. Python and TorchScript numerical equivalence
+2. Trained model weights loading
+3. Python eager vs TorchScript numerical equivalence
 4. C++ inference integration
+5. Python TorchScript vs C++ LibTorch numerical equivalence
 
-Latest result:
+### Cross-Language Numerical Validation
 
-**4 passed in 6.45 seconds**
+The same TorchScript model and binary input are executed in Python and C++.
+
+All 10 output logits are compared using NumPy with:
+- Relative tolerance: 1e-5
+- Absolute tolerance: 1e-6
+
+Measured maximum absolute difference:
+
+**4.81 × 10^-10**
+
+This validates numerical consistency between the Python and C++ inference implementations for the tested input.
 
 ## Key Learnings
 
@@ -213,10 +226,10 @@ Latest result:
 - CPU threading and inference latency
 - Benchmark methodology and measurement variability
 - Automated validation of ML inference
+- Cross-language numerical equivalence testing
 
 ## Future Improvements
 
-- Numerical equivalence testing between Python and C++ outputs
 - p95 and p99 latency measurements
 - Additional batch-size benchmarks
 - GitHub Actions CI
